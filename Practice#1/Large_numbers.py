@@ -3,6 +3,7 @@ import math
 import asyncio
 from time import time
 
+
 async def task1():
     print("Кол-во вариантов ключей, которые можно задать последовательностью:")
     for i in range(3,13):
@@ -21,7 +22,7 @@ async def task2():
 
 
 async def task3(keys_array):
-    print("\nВыберите для ключа какой длинной бит необходимо выполнить брутфорс:")
+    print("\n\nВыберите для ключа какой длинной бит необходимо выполнить брутфорс:")
     bit = int(input())
     start_time = time()
     key_index = int(math.log2(bit)-2)
@@ -29,17 +30,17 @@ async def task3(keys_array):
     hex_range = bit/4
     start_key = '0x'
     for i in range(0, int(hex_range)):
-        start_key+='0'
+        start_key += '0'
     start = int(start_key, 16)
     end = int(key,16)
-    while(start!=end):
-        start+=1
-    print(f"Количество времени, потраченной на нахождение ключа длинной {bit} бит составляет: {(time()-start_time)*1000} мс")
+    while start != end:
+        start += 1
+    print(f"Количество времени, потраченного на нахождение ключа {hex(start).upper()} длиной {bit} бит составляет: {(time()-start_time)*1000} мс")
 
 
 async def main():
     await task1()
-    print("\n\n")
+    print("\n")
     await task2()
 
 
