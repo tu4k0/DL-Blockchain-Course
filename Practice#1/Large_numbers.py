@@ -22,7 +22,7 @@ async def task2():
 
 
 async def task3(keys_array):
-    print("\n\nВыберите для ключа какой длинной бит необходимо выполнить брутфорс:")
+    print("\n\nВыберите для ключа какой длиной бит необходимо выполнить брутфорс:")
     bit = int(input())
     start_time = time()
     key_index = int(math.log2(bit)-2)
