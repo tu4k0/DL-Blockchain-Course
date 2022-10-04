@@ -21,7 +21,7 @@ async def task2():
 
 
 async def task3(keys_array):
-    print("\nВыберите для ключа какой длинной бит необходимо выполнить брутфорс:")
+    print("\n\nВыберите для ключа какой длинной бит необходимо выполнить брутфорс:")
     bit = int(input())
     start_time = time()
     key_index = int(math.log2(bit)-2)
@@ -34,12 +34,12 @@ async def task3(keys_array):
     end = int(key,16)
     while(start!=end):
         start+=1
-    print(f"Количество времени, потраченной на нахождение ключа длинной {bit} бит составляет: {(time()-start_time)*1000} мс")
+    print(f"Количество времени, потраченной на нахождение ключа {hex(start).upper()} длинной {bit} бит составляет: {(time()-start_time)*1000} мс")
 
 
 async def main():
     await task1()
-    print("\n\n")
+    print("\n")
     await task2()
 
 
