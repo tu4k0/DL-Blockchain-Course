@@ -1,5 +1,7 @@
+import Hex_Int_Lib as hil
+
 def main():
-    print("Practice#2 start")
+    hil.from_hex_to_lil_endian()
 
 
 if __name__ == '__main__':
