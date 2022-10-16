@@ -61,5 +61,22 @@ def from_little_endian_to_hex(little_endian, bytes):
     return hex_value
 
 
-def from_big_endian_to_hex(value):
-    print(f'hex: {value}')
+def from_big_endian_to_hex(big_endian, bytes):
+    hex_list = []
+    big_endian = int(big_endian)
+    hex_value = '0x'
+    for i in range(0, int(bytes)):
+        ost = hex(big_endian % 16)
+        hex_list.append(hex(big_endian % 16)[2:])
+        big_endian = big_endian // 16
+        if ost < '0xff':
+            hex_list[i] += hex(big_endian % 16)[2:]
+            big_endian = big_endian // 16
+            hex_cell = str(hex_list[i])
+            cell = list(hex_cell)
+            cell[0], cell[1] = cell[1], cell[0]
+            hex_list[i] = ''.join(cell)
+    hex_list.reverse()
+    for i in hex_list:
+        hex_value += i
+    return hex_value
