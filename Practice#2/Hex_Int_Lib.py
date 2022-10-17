@@ -1,6 +1,7 @@
 def from_hex_to_little_endian(hex_value):
     little_endian_bytes_list = ''
     little_endian_hex = '0x'
+    hex_value = int(hex_value, 16)
     hex_bytes = hex_value.to_bytes(hex_value.bit_length() // 8, byteorder='little')
     hex_bytes_list = list(hex_bytes)
     hex_bytes_amount = hex_value.bit_length() // 8
@@ -21,6 +22,7 @@ def from_hex_to_little_endian(hex_value):
 def from_hex_to_big_endian(hex_value):
     big_endian_bytes_list = ''
     big_endian_hex = '0x'
+    hex_value = int(hex_value, 16)
     hex_bytes = hex_value.to_bytes(hex_value.bit_length() // 8, byteorder='big')
     hex_bytes_list = list(hex_bytes)
     hex_bytes_amount = hex_value.bit_length() // 8
