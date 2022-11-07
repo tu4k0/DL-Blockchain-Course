@@ -89,7 +89,7 @@ def main():
     print('Vigenere Cipher')
     mode = input('Choose mode (Encode/Decode): ').lower()
     message = input('Enter the message: ')
-    key = input('Введите ключ: ')
+    key = input('Enter key: ')
     cipher = Vigenere(message, key)
     if mode == 'encode':
         print(f'Ciphertext: {cipher.Encode()}')
