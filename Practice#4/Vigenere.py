@@ -35,60 +35,60 @@ class Vigenere:
         vigenere_table = self.Vigenere_table()
         cipher_key = self.Key()
         counter = 0
-        encription = ''
+        ciphertext = ''
         i = 0
         while i <= len(vigenere_table):
             if counter < len(self.message):
                 if self.message[counter] == vigenere_table[0][i]:
                     for j in range(0, len(vigenere_table)):
                         if cipher_key[counter] == vigenere_table[j][0]:
-                            encription += vigenere_table[j][i]
+                            ciphertext += vigenere_table[j][i]
                             i = 0
                             counter += 1
                             break
                 elif self.message[counter].isdigit():
-                    encription += self.message[counter]
+                    ciphertext += self.message[counter]
                     i = 0
                     counter += 1
                 else:
                     i += 1
             else:
                 break
-        return encription
+        return ciphertext
 
     def Decode(self):
-        encription = self.message
+        ciphertext = self.message
         vigenere_table = self.Vigenere_table()
         cipher_key = self.Key()
         z = 0
-        decryption = ''
+        plaintext = ''
         i = 0
         while i <= len(vigenere_table):
-            if z < len(encription):
+            if z < len(ciphertext):
                 if cipher_key[z] == vigenere_table[i][0]:
                     index = i
                     for j in range(0, len(vigenere_table)):
-                        if encription[z] == vigenere_table[index][j]:
-                            decryption += vigenere_table[0][j]
+                        if ciphertext[z] == vigenere_table[index][j]:
+                            plaintext += vigenere_table[0][j]
                             i = 0
                             z += 1
                             break
-                elif encription[z].isdigit():
-                    decryption += encription[z]
+                elif ciphertext[z].isdigit():
+                    plaintext += ciphertext[z]
                     i = 0
                     z += 1
                 else:
                     i += 1
             else:
                 break
-        return decryption
+        return plaintext
 
 
 def main():
     print('-' * 100)
     print('Vigenere Cipher')
     mode = input('Choose mode (Encode/Decode): ').lower()
-    message = input('Enter the message: ')
+    message = input('Enter message: ')
     key = input('Enter key: ')
     cipher = Vigenere(message, key)
     if mode == 'encode':
