@@ -4,11 +4,12 @@ import random
 class KeyPair:
     """Данный класс используется для подписи операций пользователя. Обеспечивает аутентичность приложения"""
     publicKey = ''
-    __privateKey = ''
+    _privateKey = ''
+    n = 0
 
     def __init__(self):
         self.publicKey = 'publicKey'
-        self.__privateKey = '__privateKey'
+        self._privateKey = '_privateKey'
 
     def genKeyPair(self):
 
@@ -37,6 +38,7 @@ class KeyPair:
         p = random.choice([i for i in cached_primes])
         q = random.choice([i for i in cached_primes])
         n = p * q
+        self.n = n
         f = Eiler(p, q)
 
         e, j = 0, True
@@ -57,17 +59,51 @@ class KeyPair:
         publickey = (hex(e) + str(hex(n).strip('0x')))[0:10]
         self.publicKey = publickey
         privatekey = (hex(d) + str(hex(n).strip('0x')))[0:10]
-        self.__privateKey = privatekey
+        self._privateKey = privatekey
 
         return publickey, privatekey
 
-
     def printKeyPair(self):
         print('PublicKey: ', self.publicKey)
-        print('PrivateKey: ', self.__privateKey)
-
-signature = KeyPair()
-signature.genKeyPair()
-signature.printKeyPair()
+        print('PrivateKey: ', self._privateKey)
 
 
+class Signature(KeyPair):
+    """Данный класс используется для верификации подписи пользователя"""
+
+    signature = 0
+
+    def __init__(self):
+        super().__init__()
+
+    def signData(self, privateKey, message):
+        privatekey = int(int(privateKey, 16) / 10000)
+        signature = (message ** privatekey) % 2
+        self.signature = signature
+        return signature
+
+    def verifySignature(self, message, publicKey, signature):
+        publickey = int(int(publicKey, 16) / 10000)
+        verifysignature = (signature ** publickey) % 2
+        if signature == verifysignature:
+            return True
+        else:
+            return False
+
+    def printSignature(self):
+        print(self.signature)
+
+
+def main():
+    print("Key pair generation: ")
+    keys = KeyPair()
+    keys.genKeyPair()
+    keys.printKeyPair()
+    print("-" * 40)
+    print("Signature verification with message (123):")
+    signature = Signature()
+    print(signature.verifySignature(123, keys.publicKey, signature.signData(keys._privateKey, 123)))
+
+
+if __name__ == '__main__':
+    main()
