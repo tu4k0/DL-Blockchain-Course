@@ -5,7 +5,6 @@ class KeyPair:
     """Данный класс используется для подписи операций пользователя. Обеспечивает аутентичность приложения"""
     publicKey = ''
     _privateKey = ''
-    n = 0
 
     def __init__(self):
         self.publicKey = 'publicKey'
