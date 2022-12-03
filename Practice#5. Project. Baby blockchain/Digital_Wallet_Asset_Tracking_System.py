@@ -113,8 +113,25 @@ class Account(KeyPair):
     def updateBalance(self, balance):
         self.balance = balance
 
-    def createPaymentOp(self):
-        return 1
+    def createPaymentOp(self, recipient, amount, key_index):
+        print("Payment Operation: ")
+        print("Payment ID: ", random.randint(1, 1000))
+        print(f"From: {self.accountID} \t", f"!Account Key Pairs: {key_index}!")
+        print(f"To: {recipient}")
+        print(f"Amount: {amount}")
+        if self.balance >= amount:
+            result = self.balance - amount
+            self.updateBalance(result)
+            print("Result: Success!")
+        else:
+            print("Result: Fail (Not enough balance)")
+        return True
+
+    def signData(self, key_index, message):
+        privatekey_index = self.wallet.get(key_index)
+        privatekey = int(int(privatekey_index, 16) / 10000)
+        signature = (message ** privatekey) % 2
+        return signature
 
     def getBalance(self):
         return self.balance
@@ -122,9 +139,8 @@ class Account(KeyPair):
     def printBalance(self):
         print("Balance: ", self.balance)
 
-    def PrintAccount(self):
+    def printAccount(self):
         print(f"Account ID: {self.accountID}", f"Wallet Info: {self.wallet}", f"Balance: {self.balance}")
-
 
 
 def main():
@@ -139,12 +155,14 @@ def main():
     print("-" * 40)
     acc = Account()
     acc.genAccount(keys.publicKey, keys._privateKey)
-    acc.PrintAccount()
+    acc.printAccount()
     acc.addKeyPairToWallet()
-    acc.PrintAccount()
+    acc.printAccount()
     acc.updateBalance(100)
-    print(acc.getBalance())
-
+    acc.printAccount()
+    acc.createPaymentOp(recipient=123234, amount=40, key_index=list(acc.wallet.items())[-1])
+    acc.signData(max(acc.wallet), 123)
+    acc.printBalance()
 
 
 if __name__ == '__main__':
