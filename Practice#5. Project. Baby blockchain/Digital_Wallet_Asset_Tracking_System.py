@@ -94,6 +94,39 @@ class Signature(KeyPair):
         print(self.signature)
 
 
+class Account(KeyPair):
+    """Данный класс используется для взаимодействия с аккаунтом"""
+
+    accountID = ''
+    wallet = dict()
+    balance = 0
+
+    def genAccount(self, public_key, private_key):
+        self.accountID = abs(int(str(hash(public_key))[:10]))
+        self.wallet.update({public_key: private_key})
+        self.balance = 0
+
+    def addKeyPairToWallet(self):
+        publickey, privatekey = KeyPair.genKeyPair(self)
+        self.wallet[publickey] = privatekey
+
+    def updateBalance(self, balance):
+        self.balance = balance
+
+    def createPaymentOp(self):
+        return 1
+
+    def getBalance(self):
+        return self.balance
+
+    def printBalance(self):
+        print("Balance: ", self.balance)
+
+    def PrintAccount(self):
+        print(f"Account ID: {self.accountID}", f"Wallet Info: {self.wallet}", f"Balance: {self.balance}")
+
+
+
 def main():
     print("Key pair generation: ")
     keys = KeyPair()
@@ -103,6 +136,15 @@ def main():
     print("Signature verification with message (123):")
     signature = Signature()
     print(signature.verifySignature(123, keys.publicKey, signature.signData(keys._privateKey, 123)))
+    print("-" * 40)
+    acc = Account()
+    acc.genAccount(keys.publicKey, keys._privateKey)
+    acc.PrintAccount()
+    acc.addKeyPairToWallet()
+    acc.PrintAccount()
+    acc.updateBalance(100)
+    print(acc.getBalance())
+
 
 
 if __name__ == '__main__':
