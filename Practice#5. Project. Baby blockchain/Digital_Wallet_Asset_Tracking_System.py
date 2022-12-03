@@ -95,30 +95,40 @@ class Signature(KeyPair):
 
 
 class Account(KeyPair):
-    """Данный класс используется для взаимодействия с аккаунтом"""
+    """Данный класс используется для создания аккаунта и проведение операций с аккаунтом"""
 
     accountID = ''
     wallet = dict()
     balance = 0
 
-    def genAccount(self, public_key, private_key):
-        self.accountID = abs(int(str(hash(public_key))[:10]))
-        self.wallet.update({public_key: private_key})
-        self.balance = 0
+    def __init__(self):
+        self.accountID = ''
+        self.wallet = dict()
+        balance = 0
+
+    def genAccount(self):
+        acc = Account()
+        public_key, private_key = KeyPair.genKeyPair(acc)
+        acc.accountID = abs(int(str(hash(public_key))[:10]))
+        acc.wallet.update({public_key: private_key})
+        acc.balance = 0
+        self.accountID = acc.accountID
+        self.wallet = acc.wallet
+        self.balance = acc.balance
+        return acc
 
     def addKeyPairToWallet(self):
-        publickey, privatekey = KeyPair.genKeyPair(self)
-        self.wallet[publickey] = privatekey
+        public_key, private_key = KeyPair.genKeyPair(self)
+        self.wallet[public_key] = private_key
 
     def updateBalance(self, balance):
         self.balance = balance
 
     def createPaymentOp(self, recipient, amount, key_index):
-        print("Payment Operation: ")
         print("Payment ID: ", random.randint(1, 1000))
-        print(f"From: {self.accountID} \t", f"!Account Key Pairs: {key_index}!")
+        print(f"From: {self.accountID} \t", f"!Key Pairs: {key_index}!")
         print(f"To: {recipient}")
-        print(f"Amount: {amount}")
+        print(f"Amount: {amount} UAH")
         if self.balance >= amount:
             result = self.balance - amount
             self.updateBalance(result)
@@ -128,19 +138,19 @@ class Account(KeyPair):
         return True
 
     def signData(self, key_index, message):
-        privatekey_index = self.wallet.get(key_index)
-        privatekey = int(int(privatekey_index, 16) / 10000)
-        signature = (message ** privatekey) % 2
+        private_key_index = self.wallet.get(key_index)
+        private_key = int(int(private_key_index, 16) / 10000)
+        signature = (message ** private_key) % 2
         return signature
 
     def getBalance(self):
-        return self.balance
+        return int(self.balance)
 
     def printBalance(self):
         print("Balance: ", self.balance)
 
     def printAccount(self):
-        print(f"Account ID: {self.accountID}", f"Wallet Info: {self.wallet}", f"Balance: {self.balance}")
+        print(f" Account ID: {self.accountID}\n", f"Wallet Info: {self.wallet}\n", f"Balance: {self.balance} UAH\n")
 
 
 def main():
@@ -153,16 +163,27 @@ def main():
     signature = Signature()
     print(signature.verifySignature(123, keys.publicKey, signature.signData(keys._privateKey, 123)))
     print("-" * 40)
+    print("Account generation: ")
     acc = Account()
-    acc.genAccount(keys.publicKey, keys._privateKey)
+    acc.genAccount()
     acc.printAccount()
+    print('')
+    print("Adding key pair: ")
     acc.addKeyPairToWallet()
     acc.printAccount()
+    print('')
+    print("Updating account balance to 100 UAH:")
     acc.updateBalance(100)
     acc.printAccount()
+    print('')
+    print("Payment Operation:")
     acc.createPaymentOp(recipient=123234, amount=40, key_index=list(acc.wallet.items())[-1])
-    acc.signData(max(acc.wallet), 123)
-    acc.printBalance()
+    print('')
+    print("Signing data (Message: 7667):")
+    print("Signature: ", acc.signData(max(acc.wallet), 7667))
+    print('')
+    print("Account balance rest:")
+    print(acc.getBalance(), "UAH")
 
 
 if __name__ == '__main__':
