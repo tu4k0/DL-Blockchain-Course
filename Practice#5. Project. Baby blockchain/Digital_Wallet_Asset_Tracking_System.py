@@ -153,6 +153,21 @@ class Account(KeyPair):
         print(f" Account ID: {self.accountID}\n", f"Wallet Info: {self.wallet}\n", f"Balance: {self.balance} UAH\n")
 
 
+class Operation:
+    """Данный класс используется для создания и подтверждения операций в блокчейне"""
+
+    sender = ''
+    receiver = ''
+    amount = 0
+    signature = 0
+
+    def createOperation(self):
+
+    def verifyOperation(self):
+
+    def printKeyPair(self):
+
+
 def main():
     print("Key pair generation: ")
     keys = KeyPair()
