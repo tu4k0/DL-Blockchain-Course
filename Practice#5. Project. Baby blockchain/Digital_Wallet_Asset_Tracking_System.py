@@ -71,36 +71,24 @@ class KeyPair:
 class Signature(KeyPair):
     """Данный класс используется для создания подписи пользователя на основе приватного, публичного ключей и исходного сообщения. Обеспечивает верификацию подписи"""
 
-    signature = dict()
+    signature = 0
 
     def __init__(self):
         super().__init__()
 
     def signData(self, privateKey, message):
+        privatekey = int(int(privateKey, 16) / 10000)
+        signature = (message ** privatekey) % 2
+        self.signature = signature
+        return signature
 
-        def Check_prime_number(n):
-            for i in range(2, n):
-                if (n % i) == 0:
-                    return False
+    def verifySignature(self, message, publicKey, signature):
+        publickey = int(int(publicKey, 16) / 10000)
+        verifysignature = (signature ** publickey) % 2
+        if signature == verifysignature:
             return True
-
-        cached_primes = [i for i in range(1, 100) if Check_prime_number(i)]
-        q = random.choice([i for i in cached_primes])
-        p = random.choice([i for i in cached_primes])
-        g = 2**((p-1)/q)
-        k = random.randint(1, int(q))
-        r = (g**k%p)%q
-        s = ((k**-1)*(int(hex(hash(message)), 16) + int(privateKey, 16)*int(r)))%q
-        self.signature.update({int(r): int(s)})
-        return self.signature
-
-    # def verifySignature(self, message, publicKey, signature):
-    #     publickey = int(int(publicKey, 16) / 10000)
-    #     verifysignature = (signature ** publickey) % 2
-    #     if signature == verifysignature:
-    #         return True
-    #     else:
-    #         return False
+        else:
+            return False
 
     def printSignature(self):
         print(self.signature)
@@ -165,40 +153,55 @@ class Account(KeyPair):
         print(f" Account ID: {self.accountID}\n", f"Wallet Info: {self.wallet}\n", f"Balance: {self.balance} UAH\n")
 
 
-# class Operation(Account):
-#     """Данный класс используется для создания и подтверждения операций в блокчейне"""
-#
-#     sender = Account
-#     receiver = Account.accountID
-#     amount = 0
-#     signature = 0
-#     operation_id = 0
-#
-#     def __init__(self, sender, receiver, amount, signature):
-#         self.sender = sender
-#         self.receiver = receiver
-#         self.amount = amount
-#         self.signature = signature
-#         self.operation_id += 1
-#
-#     def createOperation(self, sender, receiver, amount, signature):
-#         operation = Operation(sender, receiver, amount, signature)
-#         print("Operation ID: ", operation.operation_id)
-#         print(f"Sender: {operation.sender}")
-#         print(f"Receiver: {operation.receiver}")
-#         print(f"Amount: {operation.amount} UAH")
-#         print(f"Signature: {operation.signature}")
-#         return operation
-#
-#     def verifyOperation(self, sender_account):
-#         if self.amount > sender_account.balance:
-#             return False
-#         else:
-#             return True
-#
-#         if self.signature =
-#
-#     def printKeyPair(self):
+class Operation(Account):
+    """Данный класс используется для создания и подтверждения операций в блокчейне"""
+
+    sender = Account
+    receiver = Account.accountID
+    amount = 0
+    signature = 0
+    operation_id = 0
+
+    def __init__(self, sender, receiver, amount, signature):
+        self.sender = sender
+        self.receiver = receiver
+        self.amount = amount
+        self.signature = signature
+        self.operation_id += 1
+
+    def createOperation(self, sender, receiver, amount, signature):
+        operation = Operation(sender, receiver, amount, signature)
+        print("Operation ID: ", operation.operation_id)
+        print(f"Sender: {operation.sender}")
+        print(f"Receiver: {operation.receiver}")
+        print(f"Amount: {operation.amount} UAH")
+        print(f"Signature: {operation.signature}")
+        return operation
+
+    def verifyOperation(self, sender_account):
+        publickey = int(int(sender_account.wallet.keys()[-1], 16) / 10000)
+        verifysignature = (self.signature ** publickey) % 2
+        if self.amount <= sender_account.balance:
+            return True
+        elif self.signature == verifysignature:
+            return True
+        else:
+            return False
+
+    def printOperation(self):
+        print(self.operation_id, self.sender, self.receiver, self.amount, self.signature)
+
+
+class Transaction:
+    """Данный класс используется для создания транзакций в блокчейне"""
+
+    transactionID = ''
+    setOfOperations = []
+    nonce = 0
+
+    def createTransaction(self):
+
+    def printTransaction(self):
 
 
 def main():
@@ -209,8 +212,7 @@ def main():
     print("-" * 40)
     print("Signature verification with message (123):")
     signature = Signature()
-    signature.signData(keys._privateKey, 123)
-    # print(signature.verifySignature(123, keys.publicKey, signature.signData(keys._privateKey, 123)))
+    print(signature.verifySignature(123, keys.publicKey, signature.signData(keys._privateKey, 123)))
     print("-" * 40)
     print("Account generation: ")
     account = Account()
@@ -233,7 +235,6 @@ def main():
     print('')
     print("Account balance rest:")
     print(account.getBalance(), "UAH")
-    signature.printSignature()
 
 
 if __name__ == '__main__':
