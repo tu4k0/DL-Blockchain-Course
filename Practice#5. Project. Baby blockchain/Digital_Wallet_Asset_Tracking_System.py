@@ -199,9 +199,22 @@ class Transaction:
     setOfOperations = []
     nonce = 0
 
-    def createTransaction(self):
+    def __init__(self):
+        self.transactionID = ''
+        self.setOfOperations = []
+        self.nonce = 0
+
+    def createTransaction(self, setOfOperations, nonce):
+        transaction = Transaction()
+        transaction.transactionID = hex(abs(hash(str(nonce)+str(len(setOfOperations)))))
+        transaction.setOfOperations.extend(setOfOperations)
+        transaction.nonce = nonce
+        return transaction
 
     def printTransaction(self):
+        print(f"ID transaction: {self.transactionID}")
+        print(f"Operationsn: {self.setOfOperations}")
+        print(f"Nonce value: {self.nonce}")
 
 
 def main():
