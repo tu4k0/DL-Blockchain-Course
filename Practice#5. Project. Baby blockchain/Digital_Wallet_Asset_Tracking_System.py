@@ -328,6 +328,15 @@ class Block:
         print(f"{self.setOfTransaction}")
 
 
+class Blockchain(Block, Account):
+    """Данный класс используется для инициации блокчейна и валидации блоков в сети"""
+
+    coinDatabase = dict()
+    blockHistory = []
+    txDatabase = []
+    faucetCoins = 0
+
+
 def main():
     print("Key pair generation: ")
     keys = KeyPair()
