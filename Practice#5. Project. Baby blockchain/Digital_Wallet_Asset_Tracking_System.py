@@ -336,6 +336,15 @@ class Blockchain(Block, Account):
     txDatabase = []
     faucetCoins = 0
 
+    def initBlockchain(self):
+        genesis_block = Block()
+        genesis_block.createBlock(setOfTransaction=['0x7701122000'], prevHash='')
+        return genesis_block
+
+    def getTokenFromFaucet(self, account, amount):
+        account.updateBalance(amount)
+        self.coinDatabase.update({account, account.getBalance()})
+
 
 def main():
     print("Key pair generation: ")
