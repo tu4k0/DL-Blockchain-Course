@@ -206,7 +206,7 @@ class Transaction:
 
     def createTransaction(self, setOfOperations, nonce):
         transaction = Transaction()
-        transaction.transactionID = hex(abs(hash(str(nonce) + str(len(setOfOperations)))))[3:33]
+        transaction.transactionID = hex(abs(hash(str(nonce) + str(len(setOfOperations)))))[:33]
         transaction.setOfOperations.extend(setOfOperations)
         transaction.nonce = nonce
         return transaction
@@ -316,7 +316,7 @@ class Block:
         block = Block()
         block.prevHash = prevHash
         block.setOfTransaction.extend(setOfTransaction)
-        block.blockID = "77" + hex(abs(hash(str(counter) + str(len(setOfTransaction)) + str(prevHash))))[3:33]
+        block.blockID = "77" + hex(abs(hash(str(counter) + str(len(setOfTransaction)) + str(prevHash))))[:33]
         counter += 1
         return block
 
@@ -377,8 +377,10 @@ def main():
     print('')
     print("Account balance rest:")
     print(account.getBalance(), "UAH")
+    print("-" * 40)
     hash = Hash()
-    print(hash.toSHA1("Kyrylo kabak"))
+    print("Hashing message (Kyrylo) using SHA1:")
+    print(hash.toSHA1("Kyrylo"))
 
 
 if __name__ == '__main__':
