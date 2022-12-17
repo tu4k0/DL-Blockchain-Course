@@ -206,7 +206,7 @@ class Transaction:
 
     def createTransaction(self, setOfOperations, nonce):
         transaction = Transaction()
-        transaction.transactionID = hex(abs(hash(str(nonce)+str(len(setOfOperations)))))
+        transaction.transactionID = hex(abs(hash(str(nonce) + str(len(setOfOperations)))))[3:33]
         transaction.setOfOperations.extend(setOfOperations)
         transaction.nonce = nonce
         return transaction
@@ -297,6 +297,35 @@ class Hash:
             sha1_hash = '%08x%08x%08x%08x%08x' % (h0, h1, h2, h3, h4)
 
             return sha1_hash
+
+
+class Block:
+    """Данный класс используется для инициализации блоков в блокчейне"""
+
+    blockID = ""
+    prevHash = ""
+    setOfTransaction = []
+
+    def __init__(self):
+        self.blockID = ""
+        self.prevHash = ""
+        self.setOfTransaction = []
+
+    def createBlock(self, setOfTransaction, prevHash):
+        counter = 0
+        block = Block()
+        block.prevHash = prevHash
+        block.setOfTransaction.extend(setOfTransaction)
+        block.blockID = "77" + hex(abs(hash(str(counter) + str(len(setOfTransaction)) + str(prevHash))))[3:33]
+        counter += 1
+        return block
+
+    def printBlock(self):
+        print("Block Header Info")
+        print(f"Previous Block: {self.prevHash}")
+        print(f"Block ID: {self.blockID}")
+        print(f"Transaction List")
+        print(f"{self.setOfTransaction}")
 
 
 def main():
