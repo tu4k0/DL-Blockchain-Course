@@ -193,7 +193,7 @@ class Operation(Account):
         print(self.operation_id, self.sender, self.receiver, self.amount, self.signature)
 
 
-class Transaction:
+class Transaction(Operation):
     """Данный класс используется для создания транзакций в блокчейне"""
 
     transactionID = ''
@@ -300,7 +300,7 @@ class Hash:
             return sha1_hash
 
 
-class Block:
+class Block(Transaction):
     """Данный класс используется для инициализации блоков в блокчейне"""
 
     blockID = ""
@@ -329,7 +329,7 @@ class Block:
         print(f"{self.setOfTransaction}")
 
 
-class Blockchain(Block, Account, Transaction, Operation):
+class Blockchain(Block):
     """Данный класс используется для инициации блокчейна и валидации блоков в сети"""
 
     coinDatabase = dict()
@@ -337,7 +337,6 @@ class Blockchain(Block, Account, Transaction, Operation):
     txDatabase = []
     faucetCoins = 0
     blocks = []
-
 
     def __init__(self):
         self.__class__.blocks.append(self)
@@ -406,7 +405,6 @@ def main():
     hash = Hash()
     print("Hashing message (Kyrylo) using SHA1:")
     print(hash.toSHA1("Kyrylo"))
-
 
 
 if __name__ == '__main__':
