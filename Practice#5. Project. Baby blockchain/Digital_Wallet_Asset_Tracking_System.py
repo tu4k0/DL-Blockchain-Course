@@ -182,6 +182,7 @@ class Operation(Account):
         publickey = int(int(sender_account.wallet.keys()[-1], 16) / 10000)
         verifysignature = (self.signature ** publickey) % 2
         if self.amount <= sender_account.balance:
+            sender_account.balance -= self.amount
             return True
         elif self.signature == verifysignature:
             return True
@@ -328,15 +329,21 @@ class Block:
         print(f"{self.setOfTransaction}")
 
 
-class Blockchain(Block, Account):
+class Blockchain(Block, Account, Transaction, Operation):
     """Данный класс используется для инициации блокчейна и валидации блоков в сети"""
 
     coinDatabase = dict()
     blockHistory = []
     txDatabase = []
     faucetCoins = 0
+    blocks = []
 
-    def initBlockchain(self):
+
+    def __init__(self):
+        self.__class__.blocks.append(self)
+
+    @staticmethod
+    def initBlockchain():
         genesis_block = Block()
         genesis_block.createBlock(setOfTransaction=['0x7701122000'], prevHash='')
         return genesis_block
@@ -344,6 +351,24 @@ class Blockchain(Block, Account):
     def getTokenFromFaucet(self, account, amount):
         account.updateBalance(amount)
         self.coinDatabase.update({account, account.getBalance()})
+
+    def validateBlock(self, block):
+        if len(block.prevHash) == 0:
+            print("ERROR: Block prevhash do not exist or match")
+        elif block.setOfTransaction in self.txDatabase:
+            print("ERROR: Block trasnsactions already in txDatabase")
+        elif not block.setOfTransaction and block.setOfTransaction.transactionID == '00':
+            print("ERROR: Block transaction list empty")
+        elif block.setOfTransaction.setOfOperations.amount > max(self.coinDatabase.values()):
+            print("ERROR: Operations amount more than account balance!")
+        else:
+            print("Block validation status: SUCCESS")
+
+    def showCoinDatabase(self):
+        self.coinDatabase.items()
+
+    def printBlockchain(self):
+        print('Block: \n'.join(Blockchain.blocks))
 
 
 def main():
@@ -381,6 +406,7 @@ def main():
     hash = Hash()
     print("Hashing message (Kyrylo) using SHA1:")
     print(hash.toSHA1("Kyrylo"))
+
 
 
 if __name__ == '__main__':
