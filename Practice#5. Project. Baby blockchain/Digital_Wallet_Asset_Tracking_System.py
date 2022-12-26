@@ -396,6 +396,9 @@ class Category:
         else:
             print("Error!")
 
+    def printCategory(self):
+        print(self.category_id, self.name)
+
 
 def main():
     print("Key pair generation: ")
