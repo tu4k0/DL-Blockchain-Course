@@ -306,6 +306,7 @@ class Block(Transaction):
     blockID = ""
     prevHash = ""
     setOfTransaction = []
+    block_counter = 1
 
     def __init__(self):
         self.blockID = ""
@@ -313,12 +314,11 @@ class Block(Transaction):
         self.setOfTransaction = []
 
     def createBlock(self, setOfTransaction, prevHash):
-        counter = 0
         block = Block()
         block.prevHash = prevHash
         block.setOfTransaction.extend(setOfTransaction)
-        block.blockID = "77" + hex(abs(hash(str(counter) + str(len(setOfTransaction)) + str(prevHash))))[:33]
-        counter += 1
+        block.blockID = "77" + hex(abs(hash(str(self.block_counter) + str(len(setOfTransaction)) + str(prevHash))))[:33]
+        Block.block_counter += 1
         return block
 
     def printBlock(self):
@@ -391,6 +391,7 @@ class Category:
     def removeCategory(self, name):
         if name in Category.category_list:
             Category.category_list.pop(name)
+            Category.category_id -= 1
             print(f"You deleted category: {name}\nDelete was successful!")
         else:
             print("Error!")
@@ -438,6 +439,9 @@ def main():
     print(service2.createCategory('dpennz'))
     print(Category.category_list)
     service2.removeCategory('dpennz')
+    print(Category.category_list)
+    service3 = Category()
+    service3.createCategory('взуття')
     print(Category.category_list)
 
 
