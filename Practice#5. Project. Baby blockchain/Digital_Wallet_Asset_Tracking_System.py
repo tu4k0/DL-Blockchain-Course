@@ -370,6 +370,32 @@ class Blockchain(Block):
         print('Block: \n'.join(Blockchain.blocks))
 
 
+class Category:
+    """Данный класс используется для учета расходов пользователя по категориям"""
+
+    category_id = 1
+    name = ''
+    category_list = dict()
+
+    def __init__(self):
+        self.name = ''
+
+    def createCategory(self, name):
+        new_category = Category()
+        new_category.category_id = self.category_id
+        new_category.name = name
+        self.category_list.update({new_category.name: new_category.category_id})
+        Category.category_id += 1
+        return new_category
+
+    def removeCategory(self, name):
+        if name in Category.category_list:
+            Category.category_list.pop(name)
+            print(f"You deleted category: {name}\nDelete was successful!")
+        else:
+            print("Error!")
+
+
 def main():
     print("Key pair generation: ")
     keys = KeyPair()
@@ -405,6 +431,14 @@ def main():
     hash = Hash()
     print("Hashing message (Kyrylo) using SHA1:")
     print(hash.toSHA1("Kyrylo"))
+    print("-" * 40)
+    service = Category()
+    print(service.createCategory('одяг'))
+    service2 = Category()
+    print(service2.createCategory('dpennz'))
+    print(Category.category_list)
+    service2.removeCategory('dpennz')
+    print(Category.category_list)
 
 
 if __name__ == '__main__':
